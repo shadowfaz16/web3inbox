@@ -111,6 +111,7 @@ const Home: NextPage = () => {
         url: window.location.origin,
         type: "promotional",
       });
+      handleNotification("GM Hacker");
     }
   }, [handleSendNotification, isSubscribed]);
 
@@ -163,7 +164,21 @@ const Home: NextPage = () => {
   const handleNotification = (blockNumber: string) => {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
-        new Notification(`New block: ${blockNumber}`);
+        const notification = new Notification(`New block: ${blockNumber}`, {
+          body: `Click to see the block on Etherscan`,
+          data: { block: `https://etherscan.io/block/${blockNumber}` },
+          // actions: [
+          //   {
+          //     action: "open",
+          //     title: "Open Etherscan",
+          //   },
+          // ],
+          icon: `${window.location.origin}/icon-512x512.png`,
+        });
+        notification.onclick = function (event) {
+          event.preventDefault();
+          window.open(notification.data.block, "_blank");
+        };
       }
     });
   }
