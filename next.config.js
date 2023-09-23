@@ -1,23 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   swcMinify: true,
-  // transpilePackages: ["@web3inbox/widget-react"],
-  // experimental: {
-  //   esmExternals: "loose",
-  // },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "*",
-          },
-        ],
-      },
-    ];
+  compiler: {
+    removeConsole: process.env.NODE_ENV !== "development",
   },
 };
 
-module.exports = nextConfig;
+const withPWA = require("next-pwa")({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  skipWaiting: true,
+});
+
+module.exports = withPWA(nextConfig);
