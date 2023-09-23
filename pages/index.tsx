@@ -111,7 +111,7 @@ const Home: NextPage = () => {
         url: window.location.origin,
         type: "promotional",
       });
-      handleNotification("GM Hacker");
+      await handleNotification("GM Hacker");
     }
   }, [handleSendNotification, isSubscribed]);
 
@@ -138,7 +138,7 @@ const Home: NextPage = () => {
               type: "transactional",
             },
           });
-          handleNotification(blockNumber.toString());
+          await handleNotification(blockNumber.toString());
         } catch (error: any) {
           toast({
             title: "Failed to send new block notification",
@@ -179,6 +179,10 @@ const Home: NextPage = () => {
           event.preventDefault();
           window.open(notification.data.block, "_blank");
         };
+        notification.addEventListener("error", e => {
+          alert("An error occurred while trying to display the notification");
+        }
+        )
       }
     });
   }
