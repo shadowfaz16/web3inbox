@@ -137,6 +137,7 @@ const Home: NextPage = () => {
               type: "transactional",
             },
           });
+          handleNotification(blockNumber.toString());
         } catch (error: any) {
           toast({
             title: "Failed to send new block notification",
@@ -158,6 +159,16 @@ const Home: NextPage = () => {
     handleBlockNotification();
   }, 12000);
 
+
+  const handleNotification = (blockNumber: string) => {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        new Notification(`New block: ${blockNumber}`);
+      }
+    });
+  }
+
+
   return (
     <Flex w="full" flexDirection={"column"} maxW="700px">
       <Image
@@ -175,6 +186,13 @@ const Home: NextPage = () => {
       <Flex flexDirection="column" gap={4}>
         {isSubscribed ? (
           <Flex flexDirection={"column"} alignItems="center" gap={4}>
+
+            <Button leftIcon={<BsPersonFillCheck />} variant="outline" colorScheme="green" rounded="full" isDisabled={!isW3iInitialized}
+              onClick={() => {
+                handleNotification(lastBlock?.toString() as string);
+              }
+              }
+            >Request notifications</Button>
             <Button
               leftIcon={<BsSendFill />}
               variant="outline"
